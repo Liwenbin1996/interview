@@ -1,0 +1,197 @@
+1、通配符
+*	匹配零个或多个字符
+？	匹配任意一个字符
+[0-9]	匹配一个数字范围
+[abc]	匹配列表里的任何字符
+[^abc]	匹配列表以外字符
+
+
+2、	ctrl + r	命令搜索
+
+3、	su -	切换为root用户，启用一个全新的终端
+	su	仅切换用户身份不切换终端
+
+4、	id	显示当前用户信息
+
+5、	passwd	修改当前用户密码
+
+6、	命令后添加 & 	在后台运行该进程
+	ctrl + z	暂停某个程序
+	jobs		显示后台运行的程序
+	bg [id]		使id指定的程序继续在后台运行
+	fg [id]		使id指定的程序调回前台运行
+
+7、	touch	创建一个空白文件或者更新已有文件的时间
+
+8、	ls -a 	显示所有文件
+	ls -l	显示详细信息
+	ls -R	递归显示子目录结构
+	ls -ld	显示目录和连接信息
+
+9、	file	查看文件的类型
+
+10、	cd ..	上一个目录
+	cd .	当前目录
+	cd ~	用户 家 目录
+	cd -	上一个工作目录
+
+11、	cp -r 源文件(文件夹) 目标文件(文件夹)	递归复制整个目录树
+	cp -v 源文件(文件夹) 目标文件(文件夹)	显示复制详细信息
+
+12、	mv 文件 目标目录	移动文件或目录
+				如果指定文件名，则可以重命名文件
+
+13、	rm filename	删除文件
+	rm -r 		删除目录及其中的所有内容
+	rm -i		交互式删除
+	rm -f		强制删除，没有警告提示
+
+14、	mkdir 		创建一个目录
+	rmdir		删除一个空目录
+	rm -r		删除一个非空目录
+
+15、	date		查看、设置当前系统时间
+	hwclock(clock)	用以显示硬件时钟时间
+	cal		查看日历
+	uptime		查看系统运行时间，以及平均负载
+
+16、	echo		显示输入的内容
+	cat		显示文件内容
+	head		显示文件头几行，默认10行
+			-n 指定显示的行数
+	tail		显示文件末尾几行，默认10行
+			-n 指定显示的行数
+			-f 追踪显示文件更新
+	more		翻页显示文件内容，只能向下翻页
+	less		翻页显示文件内容，带上下翻页
+
+17、	lspci		查看PCI设备
+			-v 查看详细信息
+	lsusb		查看USB设备
+			-v 查看详细信息
+	lsmod		查看加载的驱动（模块）
+
+18、	shutdown -h now		立即关机
+	shutdown -h +10		10分钟后关机
+	shutdown -h 23:00	23:00分关机
+	shutdown -r now		立即重启，也可定时关机
+
+	poweroff	立即关机
+	reboot		立即重启
+
+19、	zip ***.zip filename	压缩文件
+	unzip ***.zip		解压缩文件
+
+	gzip filename		压缩文件
+	gzip -d ***.gz		解压缩文件
+	
+	tar -cvf ***.tar filename	归档文件，不压缩
+	tar -xvf ***.tar		释放归档文件
+	tar -cvzf ***.tar.gz filename	-z参数将归档后的归档文件进行gzip压缩
+
+	tar -zcvf ***.tar.gz filename	压缩，不一定非要以***tar.gz命名
+	tar -ztvf ***.tar.gz		查询
+	tar -zxvf ***.tar.gz 		解压
+
+20、	locate filename		快速查找文件、文件夹
+		此命令需要预先建立数据库，updatedb命令手工建立、更新数据库
+	
+	find 查找位置 查找参数
+	find . -name *linux*	查找当前目录下包含linux的文件
+	find / -perm 777	查找根目录下权限为777的文件
+	find / -type d		查找根目录下类型为目录的文件
+	find / -name a* -exec ls -l {} \;
+		查找以a开头的文件并执行 ls -l 命令
+		-exec   {} \; 为固定格式
+
+21、	vim
+	:x	保存并退出
+	:!系统命令	执行一个系统命令
+	:sh		切换到命令行，使用ctrl+d切换回vim
+
+22、	fdisk -l	查看所有安装的磁盘以及分区信息
+	fdisk /dev/sda	对目标磁盘进行分区操作，进入交互界面
+	分区之后使用partprobe命令让内核更新分区信息
+	/proc/partitions文件也可用来查看分区信息
+
+操作系统通过文件系统管理文件及数据，磁盘或分区需要创建文件系统之后才能为操作系统使用，创建文件系统的过程又称之为格式化。
+
+常见的文件系统有 fat32、NTFS、Ext2、Ext3、Ext4、xfs、HFS等
+windows支持的文件系统是：fat32、NTFS(主流)
+Linux支持的文件系统是：Ext2、Ext3(主流)、Ext4(主流)、xfs、HFS、fat、vfat、nfs
+
+	mke2fs -t ext4 /dev/sda1	在sda1上创建ext4类型的文件系统
+	-b blocksie	指定文件系统块大小
+	-c		建立文件系统时检查坏损块
+	-L label	指定卷标
+	-j		建立文件系统日志
+	
+	dumpe2fs /dev/sda1	查看分区的文件系统信息
+
+	e2label /dev/sda1	显示sda1的系统标签
+	e2label /dev/sda2 GAME	将sda2的系统标签设置为GAME
+
+	fsck /dev/sda2		检查并修复损坏的文件系统
+	-y	直接修复不提示
+	-t	指定文件系统类型，一般系统会自动判断文件系统类型的
+	系统启动时会对磁盘进行fsck操作
+
+磁盘或分区创建好文件系统后，需要挂载到一个目录才能使用，一般挂载到/mnt。
+	
+	mount /dev/sda1 /mnt/	将sda1挂载到/mnt/上
+
+	umount /dev/sda1 或者 umount /mnt	卸载以挂载的文件系统
+
+如果出现device is busy报错，则表示该文件系统正在被使用，无法卸载。
+
+	fuser -m /mnt		查看使用文件系统的进程
+	lsof /mnt		查看正在被使用的文件
+	
+23、	whoami		显示当前用户
+	who		显示有哪些用户已经登录系统
+	w		显示有哪些用户已经登录并且在干什么
+
+	useradd username	创建一个新用户
+	usermod 参数 username	修改用户信息
+	-l	新用户名
+	-u	新用户id
+	-d	用户家目录位置
+	-g	用户所属主组
+	-G	用户所属附属组
+	-L	锁定用户使其不能登录
+	-U	解除锁定
+	userdel username	删除用户，保留用户的家目录
+	userdel -r username	同时删除家目录
+
+	groupadd groupname	创建组
+	groupmod -n newname oldname	修改组名
+	groupmod -g newGid oldGid	修改组ID
+	groupdel groupname	删除组
+
+24、	chown username filename		修改文件的所属用户为username
+	chgrp groupname filename		修改文件的所属组
+	-R	递归修改目录下的所有文件的所属用户/组
+
+	chmod 模式 文件		修改文件的权限
+	模式为如下格式：
+	u、g、o分别代表用户、组和其他
+	a可以代表ugo
+	+、-地表加入或删除对应权限
+	r、w、x代表三种权限
+
+	chmod u+rx filename
+	chmod g-x filename
+	chmod a+rwx filename
+	-R	递归修改文件夹中所有文件的权限
+
+	也可以使用数字方式修改权限
+	r = 4
+	w = 2
+	x = 1
+	使用数字表示权限时，每组权限分别为对应数字之和
+	rw = 4 + 2 = 6
+	rwx = 4 + 2 + 1 = 7
+
+	chmod 660 filename	等价于 rw-rw----
+
+

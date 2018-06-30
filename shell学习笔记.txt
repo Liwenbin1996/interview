@@ -1,0 +1,141 @@
+1、	history  查看命令历史
+	!!  重复上一个命令
+	!55  运行命令历史中第55条命令
+	!if  运行最近一次以if开头的命令
+	!$  上一个命令最后一个参数
+
+2、	alias  设置别名
+	unalias  取消别名
+
+3、	ls *.txt  匹配以.txt结尾的所有
+	ls [12].txt  括号中任选其一
+	ls ?.txt  只匹配一个字符
+
+4、	echo "hello world" > filename  重定向
+	>> 	追加
+	<  	反向重定向 比如: cat < filename
+	2>	错误重定向，或者 2>>
+
+5、	ctrl + z	暂停任务
+	jobs 	查看被暂停的任务	
+	fg	恢复任务，优先级高的先恢复（有+号），或者指定ID，如：fg 1
+	ctrl + c	终止任务
+
+6、	a=1	在当前shell中定义变量，不可加空格
+	$a	取变量值
+	export a=1	全局声明变量，可以在子shell中使用
+	unset a	取消变量
+
+7、	a='wenbin'
+	b="echo $a"	$a被解析，返回echo wenbin
+	c='echo $a'	$被脱义，$a不被解析，返回echo $a
+	d=`echo $a`	将echo $a的结果赋给d，返回wenbin
+	e=$a$b"123"	拼接字符串a、b和123
+
+8、	. == source	即时生效，如：.bash_profile
+
+9、	cut -d ':' -f 1 /etc/passwd	以冒号为分隔符分割 /etc/passwd 文件并打印第一段 
+	cut -d ':' -f 1,2 /etc/passwd	打印1,2段
+	cut -d ':' -f 1-3 /etc/passwd	打印1到3段
+
+	cut -c 2 /etc/passwd		打印第2个字符
+	cut -c 2,5 /etc/passwd		打印第2个和第5个字符
+	cut -c 2-5 /etc/passwd		打印第2个到第5个字符
+
+10、	sort -t ':' -k 3 /etc/passwd	以冒号为分隔符，按照第3段进行ASCII排序
+	sort -t ':' -k 3 -n /etc/passwd	以冒号为分隔符，按照第3段进行数字排序
+	-r	逆向排序
+	-u	去重排序
+	sort -nru filename	对filename文件进行数字逆序去重排序
+	sort -n filename | uniq -c 对filename文件进行数字去重排序并记录词频
+
+11、	wc filename	显示行数、单词数、字节数以及文件名
+	wc -l filename	显示行数以及文件名
+
+12、	cat 1.txt | tee 1.log	tee: 在屏幕输出并且重定向
+
+13、 	tr 'a-z' 'A-Z'	tr: 替换，将小写字母替换成大写，一般与其他指令一起使用
+	cat filename | tr 'a-z' 'A-Z'
+
+14、	du -sh filename		获取文件大小，以K为单位
+	du -sb filename		以字节单位
+
+15、	split -l 10 filename	以10行为单位分割filename文件
+	split -b 1M filename	以1M为单位分割filename文件
+
+16、	grep 'string' filename		输出string所在的行
+	grep -c 'string' filename	输出string出现的行数
+	grep -n 'string' filename	输出string所在的行和行号
+	grep --color 'string' filename	改变string的颜色
+	grep -o 'string' filename | wc -l	统计string出现的次数
+	grep -v 'string' filename	输出所有不包含string的行
+	grep -A2 'string' filename	输出string所在的行和后两行
+	grep -B2 'string' filename	输出string所在的行和前两行
+	grep -C2 'string' filename	输出string所在的行和前后两行
+	grep -r 'string' /etc/		搜索/etc/文件夹下所有包含string的文件
+	
+sample:
+	grep -v '^#' 1.txt	去除1.txt中以#开头的行
+	grep '[0-9]' 1.txt	输出1.txt中含有数字的行
+	grep -n 'n$' 1.txt	输出1.txt中以n结尾的行和行号
+	grep '^[^0-9]' 1.txt	输出1.txt中非数字开头的行，括号中的^代表非
+
+	grep 'ro*t' filename		*代表之前的一个字符可以出现0次或多次
+	grep 'ro.t' filename		.代表任意一个字符
+	grep -E 'ro?t' filename		?代表之前的字符出现一次或0次，必须加-E，或使用egrep
+	grep -E 'ro+t' filename		+表示之前的字符出现一次或多次，必须加-E，或使用egrep
+	grep -E 'root|string' filename	|表示或者，必须加-E，或使用egrep
+	grep -E 'ro{2,4}' filename
+		{}表示一个范围，表示之前的字符重复2到4次，必须加-E，或使用egrep 
+	
+17、	sed '1p' -n filename	输出第一行，没有-n则输出第一行后紧接着输出所有的内容，sed不能显示行号
+	grep -n '.*' filename | sed '1,5p' -n	显示1到5行以及行号
+	sed '1,$p' -n filename		输出1行到最后一行
+	sed '/root/p' -n filename	输出包含root的行，支持[] * . + ? |，但是+ ? |需要脱义，
+					在之前加\或者添加-r选项
+	sed '1,5d' filename		删除1到5行
+	sed -r '/root|mysql/d' filename	删除包含root或mysql的行，须脱义
+	sed 's/root/boot/g' filename	替换root为boot
+	sed 's/[^0-9]//g' filename	删除所有非数字的数据，将非数字替换为空
+
+	abcd:efgh:nmpq	
+	sed -r 's/([^:]+)(:.*:)([^:]+$)/\3\2\1/' filename	交换第一段和第三段的位置
+
+	sed -i '1,5p' filename		将修改后的文件保存到文本
+
+18、	awk -F ':' '$1~/root/' filename	以:为分隔符打印第一段中匹配root的行
+	awk -F ':' '$1~/root/ {print $3,$4}' filename	打印第一段匹配root的行的第3,4段
+	awk -F ':' '$1~/root/ {OFS="#"; print $1, $2} filename'
+		以"#"为分隔符打印1,2段，相当于if()语句
+	awk -F ':' '$1=="root" {print $1, $2}' filename	打印第一段为root的行的第1，2段
+	awk -F ':' '$1=="root" || NR<30 {print}' filename
+		打印第一段为root或行号小于30的行
+	awk -F ':' '$1=$2+$3 {print}' filename	改变第1段的值为第2段加第3段
+	awk -F ':' 'NF>3 && NF<10' filename	打印段数大于3小于10的行
+	awk -F ':' 'print $NR,$NF' filename	NR为当前行号，NF为当前行的列数
+
+19、	date			显示时间
+	date +%Y		年
+	date +%y		2位数年
+	date +%m		月
+	date +%d		日
+	date +%H		时
+	date +%M		分
+	date +%S		秒
+	date +%s		时间戳
+	date -d @100		根据时间戳100反推时间
+	date +%F		2018-5-21以该形式显示日期
+	date +%T		12:00:00以该形式显示时间
+	date +%Y-%m-%d		同+%F
+	date +%H:%M:%S		同+%T
+	date +"%Y-%m-%d %H:%M:%S"	2018-5-21 12:00:00以该形式显示
+	date +%w		星期
+	date +%W		一年的第几周
+	date -d "-1 day" +"%F %T"	显示昨天此时的时间
+	date -d "+1 day" +"%F %T"	明天
+	date -d "+1 month" +"%F %T"	下个月
+	date -d "+1 year" +"%F %T"	明年
+	date -d "+1 week" +"%F %T"	下周
+	date -d "-1 hour" +"%F %T"	下个小时
+	date -d "-1 min" +"%F %T"	下分钟
+	date -d "-1 sec" +"%F %T"	下秒钟
