@@ -194,4 +194,40 @@ Linux支持的文件系统是：Ext2、Ext3(主流)、Ext4(主流)、xfs、HFS、fat、vfat、nfs
 
 	chmod 660 filename	等价于 rw-rw----
 
+25、	ifconfig		查看与配置网络状态
+	ifdown 网卡设备名	禁用该网卡设备
+	ifup 网卡设备名		启用该网卡设备
+
+26、	netstat
+	-t	列出TCP协议端口
+	-u	列出UDP协议端口
+	-n	不使用域名和服务名，而使用IP地址和端口号
+	-l	仅列出在监听状态的网络服务（针对TCP）
+	-a	列出所有的网络连接
+	-r	列出路由列表，功能和route命令一致
+
+	netstat -tunl		查看udp和处在监听状态的tcp的网络服务
+	netstat -rn		查看网关
+	route -n		查看网关
+
+27、	nslookup [主机名或IP]	查看DNS，进行域名与IP地址解析
+	nslookup		查看本机DNS服务器
+
+28、	ping [选项] ip或域名	探测指定IP或域名的网络情况
+	-c	指定ping包的次数
+	
+	ping -c 4 www.baidu.com
+
+29、	telnet [域名或者IP] [端口]	远程管理与端口探测命令
+
+30、	traceroute [选项] IP或域名	路由跟踪命令
+	-n	使用IP，不使用域名，速度更快
+
+31、	wget http://soft.vpser.net/lnmp1.1-full.tar.gz		下载命令
+
+32、	tcpdump -i eth0 -nnX port 21	抓包
+	-i	指定网卡接口
+	-nn	将数据包中的域名与服务名转为IP和端口
+	-X	以十六进制和ASCII码显示数据包内容
+	port	指定监听的端口
 

@@ -154,6 +154,6 @@ e.g.
 	find . -name "*.txt" -print0 | xargs -0 echo	
 	find . -name "*.txt" | xargs -i cp {} /home
 			将所有的txt文件拷贝到/home目录
-	find . -name "*.txt" | xargs -I [] cp {} /home	同上
+	find . -name "*.txt" | xargs -I [] cp [] /home	同上
 
 
